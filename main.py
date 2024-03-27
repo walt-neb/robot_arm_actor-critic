@@ -61,9 +61,11 @@ if __name__ == "__main__":
 
     env = GymWrapper(env)
 
+    # ----------model hyperparameters ----------------------------------------------------
     actor_learning_rate = 0.001
     critic_learning_rate = 0.001
     batch_size = 128
+    tau=0.005
     layer1_size = 256
     layer2_size = 128
 
@@ -71,7 +73,7 @@ if __name__ == "__main__":
           f'{type(env.observation_space.shape[0]), env.observation_space.shape[0]}')
     agent = Agent(actor_learning_rate=actor_learning_rate,
                   critic_learning_rate=critic_learning_rate,
-                  tau=0.005,
+                  tau=tau,
                   input_dims=tuple(env.observation_space.shape),
                   env=env,
                   n_actions=env.action_space.shape[0],
@@ -80,7 +82,7 @@ if __name__ == "__main__":
                   batch_size=batch_size)
 
     log_writer = SummaryWriter('logs')
-    n_games = 10000
+    n_games = 1000
     best_score = 0
     episode_identifier = (f"0 - actor_learning_rate_{actor_learning_rate} "
                           f"critic_learning_rate_{critic_learning_rate} "

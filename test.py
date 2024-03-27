@@ -69,5 +69,5 @@ if __name__ == "__main__":
             score += reward
             observation = next_observation
             time.sleep(0.03)
-        print(f"episode: {i_episode}, score: {score}")
+        print(f"Episode: {i_episode}, Score: {score}")
 

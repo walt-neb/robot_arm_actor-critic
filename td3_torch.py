@@ -147,10 +147,6 @@ class Agent:
         self.update_network_parameters()
 
 
-
-
-
-
     def update_network_parameters(self, tau=None):
 
         if tau == None:
@@ -176,12 +172,9 @@ class Agent:
         for name in critic_2_state_dict:
             critic_2_state_dict[name] = tau*critic_2_state_dict[name].clone() + (1-tau)* critic_2_state_dict[name].clone()
 
-
         for name in actor_state_dict:
-            actor_state_dict[name] = tau*actor_state_dict[name].clone() * (1-tau)*target_actor_state_dict[name].clone()
+            actor_state_dict[name] = tau*actor_state_dict[name].clone() + (1-tau)*target_actor_state_dict[name].clone()
 
-        #self.target_critic_1.load_state_dict(target_critic_1_state_dict)
-        #self.target_critic_2.load_state_dict(target_critic_2_state_dict)
         for name in critic_1_state_dict:
             target_critic_1_state_dict[name] = tau * critic_1_state_dict[name].clone() + (1 - tau) * \
                                                target_critic_1_state_dict[name].clone()
@@ -189,8 +182,10 @@ class Agent:
         for name in critic_2_state_dict:
             target_critic_2_state_dict[name] = tau * critic_2_state_dict[name].clone() + (1 - tau) * \
                                                target_critic_2_state_dict[name].clone()
-        self.target_actor.load_state_dict(actor_state_dict)
 
+        self.target_actor.load_state_dict(actor_state_dict)
+        self.target_critic_1.load_state_dict(target_critic_1_state_dict)
+        self.target_critic_2.load_state_dict(target_critic_2_state_dict)
 
     def save_models(self):
         self.actor.save_checkpoint()
@@ -207,8 +202,8 @@ class Agent:
             self.critic_1.load_checkpoint()
             self.critic_2.load_checkpoint()
             self.target_actor.load_checkpoint()
-            self.target_critic_1.save_checkpoint()
-            self.target_critic_2.save_checkpoint()
+            self.target_critic_1.load_checkpoint()
+            self.target_critic_2.load_checkpoint()
             print(f'Successfully loaded models from {self}')
         except:
             print("failed to load models. Starting from scratch...")
